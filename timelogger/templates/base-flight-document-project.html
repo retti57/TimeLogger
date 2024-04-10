@@ -42,7 +42,7 @@
             <a class="nav-item nav-link" id="contact" href="{% url 'contact' %}">Contact</a>
             {% if user.is_authenticated %}
 
-            <a class="nav-item nav-link" id="log" href="{% url 'create_log' %}">Create Log</a>
+            <a class="nav-item nav-link" id="log" href="{% url 'tab' %}">Create Log</a>
             <form method="post" action="{% url 'logout' %}?next={{request.path}}">
             {% csrf_token %}
             <button type="submit">Log Out</button>

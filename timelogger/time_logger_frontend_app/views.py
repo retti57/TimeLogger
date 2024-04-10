@@ -8,9 +8,10 @@ from time_logger_frontend_app.forms import ContactForm
 
 # Create your views here.
 
-class CreateUserView(CreateView):
+class UserDetailAdditionalInfoView(CreateView):
     model = UserDetailModel
     fields = '__all__'
+    template_name = 'time_logger_frontend_app/userdetailmodel_form.html'
 
 
 class SignUpView(CreateView):
