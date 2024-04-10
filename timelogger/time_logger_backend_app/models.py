@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class UserModel(models.Model):
+class UserDetailModel(models.Model):
     class FuncOnBoard(models.TextChoices):
         PILOT = "P"
         TECHNIK = "T"

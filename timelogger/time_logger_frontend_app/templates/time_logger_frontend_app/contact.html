@@ -1,0 +1,9 @@
+{% extends 'base-flight-document-project.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>FlightLog App</h1>
+<h3>Contact</h3>
+<form method="POST">
+  {% crispy form %}
+</form>
+{% endblock %}
