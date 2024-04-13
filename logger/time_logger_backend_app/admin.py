@@ -4,4 +4,5 @@ from.models import MilPerson, Aircraft, Log
 admin.site.register(MilPerson)
 admin.site.register(Aircraft)
 admin.site.register(Log)
-# admin.site.register(Pilot)
+
+
