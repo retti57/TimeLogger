@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -8,7 +10,6 @@ class MilPerson(models.Model):
     class Meta:
         verbose_name = 'Personel'
         verbose_name_plural = 'Personel latający'
-
 
     CHOICES = (
         ("pilot", "PILOT"),
@@ -27,16 +28,9 @@ class MilPerson(models.Model):
     def __str__(self):
         return f'{self.rank} {self.last_name.upper()} {self.first_name}'
 
-
-# class Pilot(models.Model):
-#     class Meta:
-#         verbose_name_plural = "Piloci"
-#     id = models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-#     user = models.ManyToManyField(related_name='func_on_board', to=MilPerson)
-
 class Aircraft(models.Model):
     class Meta:
-        # verbose_name = 'Funkcja'
+        verbose_name = 'Śmigłowiec'
         verbose_name_plural = 'Śmigłowce'
 
     AC_TYPES = (
@@ -53,30 +47,27 @@ class Aircraft(models.Model):
     )
     aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False, null=True)
     aircraft_number = models.CharField(max_length=30, blank=False, choices=W3_NUMBERS)
-    # if add_new:
-    # add_number = models.IntegerField(verbose_name='Dodaj nowy numer',blank=True)
-#
+
     def __str__(self):
         return f'{self.aircraft_type} {self.aircraft_number}'
 
 
-
 class Log(models.Model):
-    aircraft = models.ForeignKey(to=Aircraft,on_delete=models.CASCADE, related_name='aircraft', verbose_name='Śmigłowiec')
-    start_up = models.DateTimeField(verbose_name='Uruchomienie')
-    take_off = models.DateTimeField(verbose_name='Start')
-    land = models.DateTimeField(verbose_name='Lądowanie')
-    shut_down = models.DateTimeField(verbose_name='Wyłączenie')
+    class Meta:
+        verbose_name_plural = 'Logi'
 
+    aircraft = models.ForeignKey(to=Aircraft, on_delete=models.CASCADE, related_name='aircraft', verbose_name='Śmigłowiec')
+    exercise = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ćwiczenie')
+    # czas
+    date_of_flight = models.DateField(auto_now=True)
+    start_up = models.DateTimeField(default= datetime.datetime.now(),verbose_name='Uruchomienie[UTC]')
+    take_off = models.DateTimeField(default= datetime.datetime.now() ,verbose_name='Start[UTC]')
+    land = models.DateTimeField(default= datetime.datetime.now(),verbose_name='Lądowanie[UTC]')
+    shut_down = models.DateTimeField(default= datetime.datetime.now() ,verbose_name='Wyłączenie[UTC]')
 
-# załoga
-## każdy z członków załogi do wybrania z oddzielnej tabeli na podstawie klucza zewn
+    # załoga
+    crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
 
-# śmigłowiec
-## śmigłowiec na podstawie tabeli
+    def __str__(self):
+        return f"{self.aircraft} {self.date_of_flight}"
 
-# czasy
-# uruchomienie
-# start
-# lądowanie
-# wyłączenie
