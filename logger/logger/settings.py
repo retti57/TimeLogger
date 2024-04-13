@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'time_logger_project.urls'
+ROOT_URLCONF = 'logger.urls'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'time_logger_project.wsgi.application'
+WSGI_APPLICATION = 'logger.wsgi.application'
 
 
 # Database
