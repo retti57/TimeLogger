@@ -9,6 +9,7 @@ class MilPerson(models.Model):
         verbose_name = 'Personel'
         verbose_name_plural = 'Personel latający'
 
+
     CHOICES = (
         ("pilot", "PILOT"),
         ("technician", "TECHNIK"),
@@ -39,25 +40,35 @@ class Aircraft(models.Model):
         verbose_name_plural = 'Śmigłowce'
 
     AC_TYPES = (
-        ("w3", "W-3"),
-        # ("mi2", "Mi-2"),
+        ("W-3", "W-3"),
+        # ("Mi-2", "Mi-2"),
     )
     W3_NUMBERS = (
         ('0901', '0901'),
         ('0819', '0819'),
         ('0820', '0820'),
+        ('0618', '0618'),
         ('0615', '0615'),
         ('0609', '0609'),
     )
-    aircraft_type = models.TextField(max_length=255, default="w3", choices=AC_TYPES, blank=True, null=True)
-    aircraft_number = models.CharField(max_length=30, blank=False)
-
-
-
-
-# class MilPerson(User):
+    aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False, null=True)
+    aircraft_number = models.CharField(max_length=30, blank=False, choices=W3_NUMBERS)
+    # if add_new:
+    # add_number = models.IntegerField(verbose_name='Dodaj nowy numer',blank=True)
 #
-# class Log(models.Model):
+    def __str__(self):
+        return f'{self.aircraft_type} {self.aircraft_number}'
+
+
+
+class Log(models.Model):
+    aircraft = models.ForeignKey(to=Aircraft,on_delete=models.CASCADE, related_name='aircraft', verbose_name='Śmigłowiec')
+    start_up = models.DateTimeField(verbose_name='Uruchomienie')
+    take_off = models.DateTimeField(verbose_name='Start')
+    land = models.DateTimeField(verbose_name='Lądowanie')
+    shut_down = models.DateTimeField(verbose_name='Wyłączenie')
+
+
 # załoga
 ## każdy z członków załogi do wybrania z oddzielnej tabeli na podstawie klucza zewn
 
