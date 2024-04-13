@@ -1,6 +1,6 @@
 from django.contrib import admin
-from.models import MilPerson, User
-# from.models import FunctionOnBoard
+from.models import MilPerson, Aircraft
 # Register your models here.
 admin.site.register(MilPerson)
-# admin.site.register(FunctionOnBoard)
+admin.site.register(Aircraft)
+# admin.site.register(Pilot)

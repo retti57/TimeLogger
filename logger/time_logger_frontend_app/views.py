@@ -1,10 +1,12 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView
 # from time_logger_backend_app.models import FunctionOnBoard
 from django.contrib.auth.forms import UserCreationForm
 
-from logger.time_logger_frontend_app.forms import ContactForm
+from time_logger_frontend_app.forms import ContactForm
 
 
 # Create your views here.
@@ -19,7 +21,6 @@ class SignUpView(CreateView):
     form_class = UserCreationForm
     template_name = 'time_logger_frontend_app/signup.html'
     success_url = reverse_lazy('login')
-
 
 class ContactFormView(FormView):
     form_class = ContactForm
