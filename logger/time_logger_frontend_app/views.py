@@ -6,7 +6,7 @@ from django.views.generic import CreateView, FormView, TemplateView
 # from time_logger_backend_app.models import FunctionOnBoard
 from django.contrib.auth.forms import UserCreationForm
 
-from time_logger_frontend_app.forms import ContactForm
+from time_logger_frontend_app.forms import ContactForm, SignUpForm
 
 
 # Create your views here.
@@ -18,9 +18,9 @@ from time_logger_frontend_app.forms import ContactForm
 
 
 class SignUpView(CreateView):
-    form_class = UserCreationForm
+    form_class = SignUpForm
     template_name = 'time_logger_frontend_app/signup.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('home')
 
 class ContactFormView(FormView):
     form_class = ContactForm
