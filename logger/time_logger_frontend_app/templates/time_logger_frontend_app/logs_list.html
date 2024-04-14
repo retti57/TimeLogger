@@ -1,0 +1,15 @@
+{% extends 'base-flight-document-project.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1> Logi użytkownika {{ milperson }}</h1>
+<div class="logs">
+<form method="post">
+    {% for log in logs %}
+        <div class="log" id="{{log.pk}}">
+                {{log}}
+        </div>
+    {% endfor %}
+</form>
+</div>
+
+{% endblock %}
