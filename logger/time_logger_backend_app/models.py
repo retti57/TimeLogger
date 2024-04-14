@@ -45,7 +45,6 @@ class Aircraft(models.Model):
     aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False, null=True)
     aircraft_number = models.CharField(max_length=30, blank=False, choices=W3_NUMBERS)
 
-
     class Meta:
         verbose_name = 'Śmigłowiec'
         verbose_name_plural = 'Śmigłowce'
@@ -61,11 +60,10 @@ class Log(models.Model):
     exercise = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ćwiczenie')
     # czas
     date_of_flight = models.DateField(auto_now=True)
-    start_up = models.DateTimeField(default=datetime.datetime.now(),verbose_name='Uruchomienie[UTC]')
+    start_up = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Uruchomienie[UTC]')
     take_off = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Start[UTC]')
     land = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Lądowanie[UTC]')
     shut_down = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Wyłączenie[UTC]')
-
 
     # załoga
     crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
@@ -74,4 +72,14 @@ class Log(models.Model):
         verbose_name_plural = 'Logi'
 
     def __str__(self):
-        return f"{self.aircraft} {self.date_of_flight} {self.start_up}"
+        crew_list = [p.last_name for p in self.crew.all()]
+        crew = ' '.join(crew_list)
+
+        return f"{self.aircraft} {self.start_up.date()} {crew}"
+
+
+class MyDateTime(models.DateTimeField):
+    def value_to_string(self, obj):
+        val: datetime.datetime = self.value_from_object(obj)
+
+        return val.strftime('%H:%M')

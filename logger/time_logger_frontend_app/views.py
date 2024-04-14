@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView, ListView
-from time_logger_backend_app.models import Log
+from time_logger_backend_app.models import Log, MilPerson
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm
 
 
@@ -43,22 +43,22 @@ class SignUpView(CreateView):
 class CreateLogView(LoginRequiredMixin,CreateView):
     form_class = CreateLogForm
     template_name = 'time_logger_frontend_app/createlog_form.html'
+    success_url = reverse_lazy('logs')
 
 
-class LogsView(LoginRequiredMixin, ListView):
-    model = Log
-    template_name = 'time_logger_frontend_app/logs_list.html'
-
-    def get_queryset(self):
-        return Log.objects.filter(crew=self.request.user)
-
-# @ TODO  widok HOMEPAGE po zalogowaniu : wyświetla wszystkie logi lotów, chronologicznie - datą, i dodatkowo
-#  wyświetla obliczony czas powietrza i ziemii z funkcji w logger/logger_utils.py
 @login_required
 def logsview(request:HttpRequest):
-    logs = Log.objects.all()
-    # mil_person = MilPerson.objects.all().filter(id=User.get(pk=pk))
-    # user_logs = Log.objects.all()
-    context = {'logs': logs}
+    # logs = Log.objects.all()
+    # mil_person = MilPerson.objects.get(user__username=request.user.username)
+    user_logs = Log.objects.filter(crew__user__username=request.user.username)
+    # user_logs = Log.objects.filter(crew__last_name=mil_person.last_name)
+    # filtered_logs = []
+    # for log in user_logs:
+    #     crew = log.crew.all()  # lista załogi
+    #     if mil_person in crew:
+    #         filtered_logs.append(log)
+    context = {"mil_person": mil_person,
+               # "user_logs": filtered_logs,
+               "user_logs": user_logs}
 
     return render(request, 'time_logger_frontend_app/logs_list.html',context=context)
