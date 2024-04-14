@@ -1,0 +1,10 @@
+{% extends 'base-flight-document-project.html' %}
+
+{% block content %}
+<h1><i>Current tab is under maintenance</i></h1>
+<p>mil_person: {{mil_person}}</p>
+<h3>logi </h3>
+{% for log in logs %}
+    <p>{{log}}</p>
+{% endfor %}
+{% endblock %}

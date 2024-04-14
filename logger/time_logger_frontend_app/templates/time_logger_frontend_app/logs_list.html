@@ -1,11 +1,34 @@
 {% extends 'base-flight-document-project.html' %}
-{% load crispy_forms_tags %}
 {% block content %}
-<h1> Logi użytkownika {{ mil_person }}</h1>
+<h1> Logi użytkownika: {{ user.last_name | upper }} {{ user.first_name }}</h1>
 <div class="logs">
-<form method="post">
-    {{ user_logs }}
-</form>
+        {% for user_log in user_logs %}
+
+    <table class="table table-striped">
+      <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Ś-c</th>
+      <th scope="col">Uruchomienie</th>
+      <th scope="col">Start</th>
+      <th scope="col">Lądowanie</th>
+      <th scope="col">Wyłączenie</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">{{ user_log.id}}</th>
+      <td>{{ user_log.aircraft}}</td>
+      <td>{{ user_log.start_up | time }}</td>
+      <td>{{ user_log.take_off | time }}</td>
+      <td>{{ user_log.land | time }}</td>
+      <td>{{ user_log.shut_down | time }}</td>
+    </tr>
+  </tbody>
+  </table>
+    {% endfor %}
+</table>
 </div>
 
 {% endblock %}

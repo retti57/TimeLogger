@@ -56,7 +56,6 @@ class Aircraft(models.Model):
 class Log(models.Model):
     aircraft = models.ForeignKey(to=Aircraft, on_delete=models.CASCADE, related_name='aircraft',
                                  verbose_name='Śmigłowiec')
-
     exercise = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ćwiczenie')
     # czas
     date_of_flight = models.DateField(auto_now=True)

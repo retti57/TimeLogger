@@ -21,7 +21,7 @@ def conv_sec_to_H_M(totalseconds: float):
     m = floor((totalseconds % 3600) / 60)
     if len(str(h)) == 1:
         h = f'0{h}'
-    elif len(str(m)) == 1:
+    if len(str(m)) == 1:
         m = f'0{m}'
 
     return f'{h}:{m}'
