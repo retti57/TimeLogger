@@ -1,12 +1,14 @@
 from django.urls import path
-from .views import HomeView,  SignUpView, ContactFormView, TabView
+from . import views
 
 APP_NAME = 'logger_frontend'
 
 urlpatterns = [
-    path('', HomeView.as_view(), name='home'),
-    path('signup/', SignUpView.as_view(), name='signup'),
-    path('tab/', TabView.as_view(), name='tab'),
-    path('contact/', ContactFormView.as_view(), name='contact'),
+    path('', views.HomeView.as_view(), name='home'),
+    path('signup/', views.SignUpView.as_view(), name='signup'),
+    path('tab/', views.TabView.as_view(), name='tab'),
+    path('contact/', views.ContactFormView.as_view(), name='contact'),
+    path('logs/', views.logsview, name='logs'),
+    path('createlog/', views.CreateLogView.as_view(), name='createlog'),
 
 ]

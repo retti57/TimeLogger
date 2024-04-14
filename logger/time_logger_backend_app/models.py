@@ -2,7 +2,6 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
-from logger.logger.logger_utils import conv_sec_to_H_M,time_calculation
 
 
 # Create your models here.
@@ -33,7 +32,6 @@ class MilPerson(models.Model):
 class Aircraft(models.Model):
     AC_TYPES = (
         ("W-3", "W-3"),
-        # ("Mi-2", "Mi-2"),
     )
 
     W3_NUMBERS = (
@@ -63,7 +61,7 @@ class Log(models.Model):
     exercise = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ćwiczenie')
     # czas
     date_of_flight = models.DateField(auto_now=True)
-    start_up = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Uruchomienie[UTC]')
+    start_up = models.DateTimeField(default=datetime.datetime.now(),verbose_name='Uruchomienie[UTC]')
     take_off = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Start[UTC]')
     land = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Lądowanie[UTC]')
     shut_down = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Wyłączenie[UTC]')
@@ -76,4 +74,4 @@ class Log(models.Model):
         verbose_name_plural = 'Logi'
 
     def __str__(self):
-        return f"{self.aircraft} {self.date_of_flight}"
+        return f"{self.aircraft} {self.date_of_flight} {self.start_up}"
