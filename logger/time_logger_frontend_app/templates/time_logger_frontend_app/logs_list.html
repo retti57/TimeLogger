@@ -18,7 +18,7 @@
   </thead>
   <tbody>
     <tr>
-      <th scope="row">{{ user_log.id}}</th>
+      <th scope="row"><a href="/logger/log/{{ user_log.id }}">{{user_log.id}}</a></th>
       <td>{{ user_log.aircraft}}</td>
       <td>{{ user_log.start_up | time }}</td>
       <td>{{ user_log.take_off | time }}</td>

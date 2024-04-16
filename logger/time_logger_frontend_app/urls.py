@@ -10,7 +10,8 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('contact/', views.ContactFormView.as_view(), name='contact'),
     path('logs/', views.logsview, name='logs'),
-    path('log/<int:pk>/', views.detaillog, name='log_detail'),
+    path('log/<int:pk>/', views.LogDetail.as_view(), name='log_detail'),
+    # path('log/<int:pk>/', views.detaillog, name='log_detail'),
     path('createlog/', views.CreateLogView.as_view(), name='createlog'),
 
 ]

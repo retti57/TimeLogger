@@ -66,18 +66,28 @@ def tab2(request: HttpRequest):
     context = {"mil_person": mil_person, "logs": logs}
     return render(request, 'time_logger_frontend_app/tab2.html', context=context)
 
-@login_required
-def detaillog(request: HttpRequest, pk):
-    log = Log.objects.get(id=pk)
-    crew = log.crew.all()
-    # time calculation
+# @login_required
+# def detaillog(request: HttpRequest, pk):
+#     log = Log.objects.get(id=pk)
+#     crew = log.crew.all()
+#     # time calculation
+#
+#     Times = TimeCalculation(log)
+#     times_named_tup = Times.get_times()
+#     context = {
+#         "times": times_named_tup,
+#         "log": log,
+#         "crew": crew
+#     }
+#     return render(request, 'time_logger_frontend_app/log_detail.html', context)
 
-    Times = TimeCalculation(log)
-    times_named_tup = Times.get_times()
-    context = {
-        "times": times_named_tup,
-        "log": log,
-        "crew": crew
-    }
-    return render(request, 'time_logger_frontend_app/log_detail.html', context)
 
+class LogDetail(LoginRequiredMixin,DetailView):
+    model = Log
+    template_name = 'time_logger_frontend_app/log_detail.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        Times = TimeCalculation(self.model.objects.get(id=self.kwargs.get('pk')))
+        context["times"] = Times.get_times()
+        return context
