@@ -75,10 +75,3 @@ class Log(models.Model):
         crew = ' '.join(crew_list)
 
         return f"{self.aircraft} {self.start_up.date()} {crew}"
-
-
-class MyDateTime(models.DateTimeField):
-    def value_to_string(self, obj):
-        val: datetime.datetime = self.value_from_object(obj)
-
-        return val.strftime('%H:%M')

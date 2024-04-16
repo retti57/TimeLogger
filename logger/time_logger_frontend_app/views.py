@@ -3,11 +3,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, TemplateView, ListView, DetailView
 from time_logger_backend_app.models import Log, MilPerson
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm
-from logger.logger_utils import conv_sec_to_H_M, time_calculation
+from logger.logger_utils import TimeCalculation
+
 
 
 class HomeView(TemplateView):
@@ -65,23 +66,18 @@ def tab2(request: HttpRequest):
     context = {"mil_person": mil_person, "logs": logs}
     return render(request, 'time_logger_frontend_app/tab2.html', context=context)
 
-
+@login_required
 def detaillog(request: HttpRequest, pk):
     log = Log.objects.get(id=pk)
     crew = log.crew.all()
     # time calculation
-    air = conv_sec_to_H_M(time_calculation(log.start_up, log.land))
-    gnd1 = time_calculation(log.start_up, log.take_off)
-    gnd2 = time_calculation(log.land, log.shut_down)
-    gnd = gnd2+gnd1
-    gnd_total = conv_sec_to_H_M(gnd)
-    full = conv_sec_to_H_M(time_calculation(log.start_up,log.shut_down))
 
+    Times = TimeCalculation(log)
+    times_named_tup = Times.get_times()
     context = {
-        "air": air,
-        "gnd": gnd_total,
-        "full": full,
+        "times": times_named_tup,
         "log": log,
         "crew": crew
     }
     return render(request, 'time_logger_frontend_app/log_detail.html', context)
+
