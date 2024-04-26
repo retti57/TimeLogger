@@ -2,13 +2,36 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, TemplateView, ListView, DetailView
 from time_logger_backend_app.models import Log, MilPerson
-from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm
+from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm
 from logger.logger_utils import TimeCalculation
+from spiderpoints.spiderpoints import SpiderPoints
 
+from django.http import FileResponse, HttpResponse
+
+
+def send_file(response: HttpResponse):
+    gpxfile = open('punkty.gpx', 'rb')
+    response = FileResponse(gpxfile)
+    return response
+
+# Create your views here.
+def spiderpoints(request: HttpRequest):
+    context = {"form": CreateGridForm()}
+    if request.method == "POST":
+        print(request.POST)
+
+        SpiderPoints(
+            request.POST['initial_point'],
+            request.POST['occurrence'],
+            request.POST['distance'],
+        ).create_kml_gpx()
+
+        return redirect('send_file/')
+    return render(request, "spiderpoints/spiderpoints.html", context=context)
 
 
 class HomeView(TemplateView):
@@ -33,7 +56,21 @@ class ContactFormView(FormView):
 class SignUpView(CreateView):
     form_class = SignUpForm
     template_name = 'time_logger_frontend_app/signup.html'
+    success_url = reverse_lazy('milperson')
+
+
+class MilpersonView(CreateView):
+    form_class = MilPersonForm
+    template_name = 'time_logger_frontend_app/milperson.html'
     success_url = reverse_lazy('home')
+
+    def form_valid(self, form: MilPersonForm):
+        #@TODO cleand_data na pole formularza user
+        user_credential = form.cleaned_data.get('username')
+        print(user_credential)
+
+
+        return super().form_valid(form)
 
 
 class CreateLogView(LoginRequiredMixin, CreateView):
