@@ -15,6 +15,8 @@ from django.http import FileResponse, HttpResponse
 
 
 def spiderpoints(request: HttpRequest):
+    """ Widok renderuje formularz do wpisania danych do przekazania do API . Wciśnięcie przycisku wysyła zapytanie do API
+    . API tworzy plik który następnie odsyła do klienta by pobrał. Odpowienio jest to plik kml lub gpx """
     form = CreateGridForm()
     context = {"form": form}
     if request.method == "GET":
@@ -27,10 +29,11 @@ def spiderpoints(request: HttpRequest):
                 'distance': form.cleaned_data['distance'],
             }
             print(data)
+            #  nie poprawnie przekazuje dane zawarte w  "data".
             try:
                 response_kml = httpx.post('http://127.0.0.1:5000/kml/points/', json=data)
                 response_gpx = httpx.post('http://127.0.0.1:5000/gpx/points/', json=data)
-
+                # api dostępne w https://github.com/retti57/SpiderPoints_api/
                 if response_kml.status_code == 200 and response_gpx.status_code == 200:
                     return JsonResponse({"success": True})
                 else:
