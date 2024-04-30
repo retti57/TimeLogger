@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from time_logger_backend_app.models import Log, MilPerson
 
+
 class MilPersonForm(forms.ModelForm):
     class Meta:
         model = MilPerson
@@ -15,7 +16,6 @@ class MilPersonForm(forms.ModelForm):
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('contact')
         self.helper.add_input(Submit('submit', "Submit"))
-
 
 
 class SignUpForm(UserCreationForm):
@@ -60,5 +60,6 @@ class CreateGridForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-        self.helper.form_action = reverse_lazy('spiderpoints')
-        self.helper.add_input(Submit('submit', "Submit"))
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'http://127.0.0.1:5000/kml/points/'
+        self.helper.add_input(Submit('submit', "Create"))

@@ -1,0 +1,13 @@
+{% extends 'base-flight-document-project.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1>Grid Creator</h1>
+<h2>SpiderPoints</h2>
+<form>
+<!--    {% csrf_token %}-->
+    {% crispy form %}
+</form>
+<h2>SpiderPoints</h2>
+
+{% endblock %}

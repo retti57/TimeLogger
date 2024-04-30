@@ -1,38 +1,46 @@
+import httpx
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, FormView, TemplateView, ListView, DetailView
 from time_logger_backend_app.models import Log, MilPerson
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm
 from logger.logger_utils import TimeCalculation
-from spiderpoints.spiderpoints import SpiderPoints
-
+from urllib.parse import quote
 from django.http import FileResponse, HttpResponse
 
 
-def send_file(response: HttpResponse):
-    gpxfile = open('punkty.gpx', 'rb')
-    response = FileResponse(gpxfile)
-    return response
 
-# Create your views here.
 def spiderpoints(request: HttpRequest):
-    context = {"form": CreateGridForm()}
-    if request.method == "POST":
-        print(request.POST)
+    form = CreateGridForm()
+    context = {"form": form}
+    if request.method == "GET":
+        form = CreateGridForm(request.GET)
+        if form.is_valid():
 
-        SpiderPoints(
-            request.POST['initial_point'],
-            request.POST['occurrence'],
-            request.POST['distance'],
-        ).create_kml_gpx()
+            data = {
+                'initial_point': form.cleaned_data['initial_point'],
+                'occurrence': form.cleaned_data['occurrence'],
+                'distance': form.cleaned_data['distance'],
+            }
+            print(data)
+            try:
+                response_kml = httpx.post('http://127.0.0.1:5000/kml/points/', json=data)
+                response_gpx = httpx.post('http://127.0.0.1:5000/gpx/points/', json=data)
 
-        return redirect('send_file/')
+                if response_kml.status_code == 200 and response_gpx.status_code == 200:
+                    return JsonResponse({"success": True})
+                else:
+                    return JsonResponse({"success": False, "message": "Error occurred while processing request."},
+                                        status=500)
+
+            except Exception as e:
+                return JsonResponse({"success": False, "message": str(e)}, status=500)
+
     return render(request, "spiderpoints/spiderpoints.html", context=context)
-
 
 class HomeView(TemplateView):
     template_name = 'time_logger_frontend_app/home.html'
@@ -65,10 +73,9 @@ class MilpersonView(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form: MilPersonForm):
-        #@TODO cleand_data na pole formularza user
+        # @TODO cleand_data na pole formularza user
         user_credential = form.cleaned_data.get('username')
         print(user_credential)
-
 
         return super().form_valid(form)
 
@@ -103,6 +110,7 @@ def tab2(request: HttpRequest):
     context = {"mil_person": mil_person, "logs": logs}
     return render(request, 'time_logger_frontend_app/tab2.html', context=context)
 
+
 # @login_required
 # def detaillog(request: HttpRequest, pk):
 #     log = Log.objects.get(id=pk)
@@ -119,11 +127,11 @@ def tab2(request: HttpRequest):
 #     return render(request, 'time_logger_frontend_app/log_detail.html', context)
 
 
-class LogDetail(LoginRequiredMixin,DetailView):
+class LogDetail(LoginRequiredMixin, DetailView):
     model = Log
     template_name = 'time_logger_frontend_app/log_detail.html'
 
-    def get_context_data(self,**kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         Times = TimeCalculation(self.model.objects.get(id=self.kwargs.get('pk')))
         context["times"] = Times.get_times()

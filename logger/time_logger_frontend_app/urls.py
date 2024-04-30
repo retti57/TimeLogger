@@ -15,5 +15,4 @@ urlpatterns = [
     # path('log/<int:pk>/', views.detaillog, name='log_detail'),
     path('createlog/', views.CreateLogView.as_view(), name='createlog'),
     path('spiderpoints/', views.spiderpoints, name='spiderpoints'),
-    path('send_file/', views.send_file, name='send_file'),
 ]
