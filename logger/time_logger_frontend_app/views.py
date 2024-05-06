@@ -1,6 +1,8 @@
-import httpx
+import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+import json
+
 from django.db.models import Q
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
@@ -25,14 +27,13 @@ def spiderpoints(request: HttpRequest):
 
             data = {
                 'initial_point': form.cleaned_data['initial_point'],
-                'occurrence': form.cleaned_data['occurrence'],
-                'distance': form.cleaned_data['distance'],
+                'occurrence': str(form.cleaned_data['occurrence']),
+                'distance': str(form.cleaned_data['distance']),
             }
-            print(data)
-            #  nie poprawnie przekazuje dane zawarte w  "data".
+
             try:
-                response_kml = httpx.post('http://127.0.0.1:5000/kml/points/', json=data)
-                response_gpx = httpx.post('http://127.0.0.1:5000/gpx/points/', json=data)
+                response_kml = requests.post('http://localhost:5000/kml/points/', json=data)
+                response_gpx = requests.post('http://localhost:5000/gpx/points/', json=data)
                 # api dostępne w https://github.com/retti57/SpiderPoints_api/
                 if response_kml.status_code == 200 and response_gpx.status_code == 200:
                     return JsonResponse({"success": True})
