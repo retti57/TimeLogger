@@ -5,7 +5,7 @@ APP_NAME = 'logger_frontend'
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
-    path('tab/', views.TabView.as_view(), name='tab'),
+    # path('tab/', views.TabView.as_view(), name='tab'),
     path('tab2/', views.tab2, name='tab2'),
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('milperson/', views.MilpersonView.as_view(), name='milperson'),
