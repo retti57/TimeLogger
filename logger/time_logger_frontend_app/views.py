@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -35,8 +37,37 @@ def spiderpoints(request: HttpRequest):
                 response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
 
                 return response
+            except ConnectionError:
+                from spiderpoints.spiderpoints import SpiderPoints
+                timestmp = datetime.now().strftime('%d%m%Y_%H%M%S')
+
+                filename = f'punkty_{timestmp}'
+
+                SpiderPoints(data['initial_point'],
+                             data['occurrence'],
+                             data['distance']
+                             ).create_kml_gpx(filename=filename)
+
+                response = HttpResponse(bytes(f'{filename}.gpx'.encode()), content_type='application/octet-stream')
+                response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
+
+                return response
             except Exception as e:
-                return JsonResponse({"success": False, "message": str(e)}, status=500)
+                print("Exeption: ", e)
+                print('I do it anyway...')
+                from spiderpoints.spiderpoints import SpiderPoints
+                timestmp = datetime.now().strftime('%d%m%Y_%H%M%S')
+
+                filename = f'punkty_{timestmp}'
+
+                SpiderPoints(data['initial_point'],
+                             data['occurrence'],
+                             data['distance']
+                             ).create_kml_gpx(filename=filename)
+
+                response = HttpResponse(bytes(f'{filename}.gpx'.encode()), content_type='application/octet-stream')
+                response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
+                return response
 
     return render(request, "spiderpoints/spiderpoints.html", context=context)
 
