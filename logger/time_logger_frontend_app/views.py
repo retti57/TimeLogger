@@ -1,8 +1,6 @@
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-import json
-
 from django.db.models import Q
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
@@ -11,8 +9,7 @@ from django.views.generic import CreateView, FormView, TemplateView, DetailView
 from time_logger_backend_app.models import Log, MilPerson
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm
 from logger.logger_utils import TimeCalculation
-from urllib.parse import quote
-from django.http import FileResponse, HttpResponse
+from django.http import HttpResponse
 
 
 
@@ -32,8 +29,8 @@ def spiderpoints(request: HttpRequest):
             }
 
             try:
-                files = requests.post('http://localhost:5000/points/', json=data)
-                file_content = files.content
+                file = requests.post('http://localhost:5000/points/', json=data)
+                file_content = file.content
                 response = HttpResponse(file_content, content_type='application/octet-stream')
                 response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
 
