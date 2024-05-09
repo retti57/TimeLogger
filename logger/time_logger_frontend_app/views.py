@@ -4,10 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import json
 
 from django.db.models import Q
-from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, FormView, TemplateView, ListView, DetailView
+from django.http import HttpRequest, JsonResponse
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, FormView, TemplateView, DetailView
 from time_logger_backend_app.models import Log, MilPerson
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm
 from logger.logger_utils import TimeCalculation
@@ -32,19 +32,17 @@ def spiderpoints(request: HttpRequest):
             }
 
             try:
-                response_kml = requests.post('http://localhost:5000/kml/points/', json=data)
-                response_gpx = requests.post('http://localhost:5000/gpx/points/', json=data)
-                # api dostępne w https://github.com/retti57/SpiderPoints_api/
-                if response_kml.status_code == 200 and response_gpx.status_code == 200:
-                    return JsonResponse({"success": True})
-                else:
-                    return JsonResponse({"success": False, "message": "Error occurred while processing request."},
-                                        status=500)
+                files = requests.post('http://localhost:5000/points/', json=data)
+                file_content = files.content
+                response = HttpResponse(file_content, content_type='application/octet-stream')
+                response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
 
+                return response
             except Exception as e:
                 return JsonResponse({"success": False, "message": str(e)}, status=500)
 
     return render(request, "spiderpoints/spiderpoints.html", context=context)
+
 
 class HomeView(TemplateView):
     template_name = 'time_logger_frontend_app/home.html'

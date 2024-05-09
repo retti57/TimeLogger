@@ -61,6 +61,6 @@ class CreateGridForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
-        # self.helper.form_action = 'http://127.0.0.1:5000/kml/points/'
+        # self.helper.form_action = 'http://127.0.0.1:5000/points/'
         self.helper.form_action = reverse_lazy('spiderpoints')
         self.helper.add_input(Submit('submit', "Create"))
