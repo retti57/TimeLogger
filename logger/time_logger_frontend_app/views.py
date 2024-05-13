@@ -47,11 +47,11 @@ def spiderpoints(request: HttpRequest):
                              data['occurrence'],
                              data['distance']
                              ).create_kml_gpx(filename=filename)
-
-                response = HttpResponse(bytes(f'{filename}.gpx'.encode()), content_type='application/octet-stream')
+                file_to_send = open(f'{filename}.gpx')
+                response = HttpResponse(bytes(file_to_send. read().encode()), content_type='application/octet-stream')
                 response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
-
-                return response
+                file_to_send.close()
+                return HttpResponse('<h1>No internet connection</h1>')
             except Exception as e:
                 print("Exeption: ", e)
                 print('I do it anyway...')
@@ -65,8 +65,10 @@ def spiderpoints(request: HttpRequest):
                              data['distance']
                              ).create_kml_gpx(filename=filename)
 
-                response = HttpResponse(bytes(f'{filename}.gpx'.encode()), content_type='application/octet-stream')
+                file_to_send = open(f'{filename}.gpx')
+                response = HttpResponse(bytes(file_to_send.read().encode()), content_type='application/octet-stream')
                 response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
+                file_to_send.close()
                 return response
 
     return render(request, "spiderpoints/spiderpoints.html", context=context)
