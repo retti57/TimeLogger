@@ -3,8 +3,9 @@
 {% block content %}
 <h1><i>Current tab is under maintenance</i></h1>
 <!--<p>mil_person: {{mil_person}}</p>-->
-<h3>log </h3>
 <h2>{{log}}</h2>
+<p>{{log.crew_list}}</p>
+
 <div class="flight_info">
     <p>Ś-c: {{log.aircraft}}</p>
     <p>Ćw: {{log.exercise}}</p>
@@ -14,9 +15,11 @@
     <p>Start: {{log.take_off}}</p>
     <p>Lądowanie: {{log.land}}</p>
     <p>Wyłączenie: {{log.shut_down}}</p>
-    <p>Załoga: </p>
+</div>
+<div class="crew">
+    <ul>Załoga: </ul>
     {%for p in crew%}
-        <p>{{p}}</p>
+        <li>{{p}}</li>
     {%endfor%}
 </div>
 <div class="flight_times">

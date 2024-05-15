@@ -167,4 +167,7 @@ class LogDetail(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         Times = TimeCalculation(self.model.objects.get(id=self.kwargs.get('pk')))
         context["times"] = Times.get_times()
+
+        crew_list = [p.last_name for p in self.model.objects.get(id=self.kwargs.get('pk')).crew.all()]
+        context["crew"] = crew_list
         return context
