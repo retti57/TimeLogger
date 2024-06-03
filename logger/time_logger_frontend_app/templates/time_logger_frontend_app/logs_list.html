@@ -1,6 +1,7 @@
 {% extends 'base-flight-document-project.html' %}
 {% block content %}
 <h1> Logi użytkownika: {{ user.last_name | upper }} {{ user.first_name }}</h1>
+<h3> Liczba wszystkich logów: {{ count_logs }}</h3>
 <div class="logs">
         {% for user_log in user_logs %}
 
@@ -30,5 +31,6 @@
     {% endfor %}
 </table>
 </div>
+<h3> Liczba wszystkich logów: {{ count_logs }}</h3>
 
 {% endblock %}

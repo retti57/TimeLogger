@@ -1,0 +1,13 @@
+{% extends 'base-flight-document-project.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>FlightLog App</h1>
+<h3>Notatki | Uwagi</h3>
+<div class="notes">
+  {% for note in notes %}
+  <li>{{ note }}</li>
+  {% endfor %}
+</div>
+
+
+{% endblock %}

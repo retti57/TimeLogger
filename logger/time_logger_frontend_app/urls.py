@@ -15,4 +15,6 @@ urlpatterns = [
     # path('log/<int:pk>/', views.detaillog, name='log_detail'),
     path('createlog/', views.CreateLogView.as_view(), name='createlog'),
     path('spiderpoints/', views.spiderpoints, name='spiderpoints'),
+    path('notes/', views.NotesView.as_view(), name='notes'),
+    path('addnotes/', views.AddNotesView.as_view(), name='addnotes'),
 ]

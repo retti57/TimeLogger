@@ -36,16 +36,17 @@
     <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
 
-            <a class="nav-item nav-link" id="home" href="{% url 'home' %}">Home</a>
+            <a class="nav-item nav-link" id="home" href="{% url 'home' %}">Główna</a>
             <a class="nav-item nav-link" id="spiderpoints" href="{% url 'spiderpoints' %}">Spiderpoints</a>
             <a class="nav-item nav-link" id="tab2" href="{% url 'tab2' %}">tab2</a>
-            <a class="nav-item nav-link" id="contact" href="{% url 'contact' %}">Contact</a>
+            <a class="nav-item nav-link" id="contact" href="{% url 'contact' %}">Kontakt</a>
             {% if user.is_authenticated %}
-                <a class="nav-item nav-link" id="logs" href="{% url 'logs' %}">Logs </a>
-                <a class="nav-item nav-link" id="createlog" href="{% url 'createlog' %}">Create Log</a>
+                <a class="nav-item nav-link" id="notes" href="{% url 'notes' %}">Komentarze/Uwagi </a>
+                <a class="nav-item nav-link" id="logs" href="{% url 'logs' %}">Logi </a>
+                <a class="nav-item nav-link" id="createlog" href="{% url 'createlog' %}">Utwórz nowy Log</a>
                 <form method="post" action="{% url 'logout' %}?next={{request.path}}">
                 {% csrf_token %}
-                <button type="submit">Log Out</button>
+                <button type="submit" class="btn btn-secondary btn-lg px-3 py-1">Log Out</button>
                 </form>
             {% else %}
                 <a class="nav-item nav-link" id="signup" href="{% url 'signup' %}">Sign Up</a>

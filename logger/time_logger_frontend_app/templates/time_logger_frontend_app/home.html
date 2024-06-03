@@ -8,10 +8,10 @@
         <p>Welcome: {{user.get_username}} !</p>
     <form method="post" action="{% url 'logout' %}?next={{request.path}}">
         {% csrf_token %}
-        <button type="submit">Log Out</button>
+        <button type="submit" class="btn btn-primary btn-lg px-4">Log Out</button>
     </form>
     {% else %}
         <p> You are not logged in.</p>
-        <a href="{% url 'login' %}?next={{request.path}}">Login Here</a>
+        <a href="{% url 'login' %}?next={{request.path}}"><button class="btn btn-success btn-lg px-4">Login Here</button></a>
     {% endif %}
 {% endblock %}

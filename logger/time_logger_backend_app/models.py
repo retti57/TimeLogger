@@ -75,3 +75,14 @@ class Log(models.Model):
         crew = ' '.join(crew_list)
 
         return f"{self.aircraft} {self.start_up.date()} {crew}"
+
+
+class Notes(models.Model):
+    aircraft = models.ForeignKey(to=Aircraft, on_delete=models.DO_NOTHING, related_name='aircraft_notes',
+                                 verbose_name='Śmigłowiec')
+    date_of_note = models.DateField(auto_now=True)
+    note = models.CharField(max_length=1255, blank=False, null=False, verbose_name='Notatka')
+
+    class Meta:
+        verbose_name = 'Notatka'
+        verbose_name_plural = 'Notatki śmigłowca'

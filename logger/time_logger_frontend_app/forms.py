@@ -3,7 +3,7 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
-from time_logger_backend_app.models import Log, MilPerson
+from time_logger_backend_app.models import Log, MilPerson, Notes
 
 
 class MilPersonForm(forms.ModelForm):
@@ -52,6 +52,23 @@ class CreateLogForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', "Submit"))
 
 
+class CreateNoteForm(forms.ModelForm):
+    class Meta:
+        model = Notes
+        fields = '__all__'
+        widgets = {
+            "note": forms.Textarea()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_action = reverse_lazy('logs')
+        self.helper.add_input(Submit('submit', "Submit"))
+
+
+
+
 class CreateGridForm(forms.Form):
     initial_point = forms.CharField()
     distance = forms.IntegerField()
@@ -61,6 +78,5 @@ class CreateGridForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
-        # self.helper.form_action = 'http://127.0.0.1:5000/points/'
         self.helper.form_action = reverse_lazy('spiderpoints')
         self.helper.add_input(Submit('submit', "Create"))
