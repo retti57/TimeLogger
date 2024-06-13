@@ -6,6 +6,20 @@ from django.db import models
 
 # Create your models here.
 
+class Notes(models.Model):
+    date_of_note = models.DateField(auto_now=True)
+    note = models.CharField(max_length=1255, default='-', blank=True, null=True, verbose_name='Notatka')
+
+    # noted_aircraft = models.Fo(to=)
+
+    class Meta:
+        verbose_name = 'Notatka do śmigłowca'
+        verbose_name_plural = 'Notatki śmigłowca'
+
+    def __str__(self):
+        return f'{self.date_of_note} {self.note[:50]}(...)'
+
+
 class MilPerson(models.Model):
     CHOICES = (
         ("pilot", "PILOT"),
@@ -20,6 +34,8 @@ class MilPerson(models.Model):
     last_name = models.CharField(max_length=30, blank=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, blank=True, related_name='credentials')
     function_on_board = models.TextField(max_length=255, choices=CHOICES, blank=True, null=True)
+    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, null=True, blank=True, related_name='milperson_notes',
+                              verbose_name='Uwagi')
 
     class Meta:
         verbose_name = 'Personel'
@@ -42,8 +58,10 @@ class Aircraft(models.Model):
         ('0615', '0615'),
         ('0609', '0609'),
     )
-    aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False, null=True)
+    aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False)
     aircraft_number = models.CharField(max_length=30, blank=False, choices=W3_NUMBERS)
+    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, blank=True, null=True, related_name='aircraft_notes',
+                              verbose_name='Uwagi')
 
     class Meta:
         verbose_name = 'Śmigłowiec'
@@ -67,6 +85,9 @@ class Log(models.Model):
     # załoga
     crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
 
+    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, null=True, blank=True, related_name='log_notes',
+                              verbose_name='Komentarz')
+
     class Meta:
         verbose_name_plural = 'Logi'
 
@@ -74,15 +95,4 @@ class Log(models.Model):
         crew_list = [p.last_name for p in self.crew.all()]
         crew = ' '.join(crew_list)
 
-        return f"{self.aircraft} {self.start_up.date()} {crew}"
-
-
-class Notes(models.Model):
-    aircraft = models.ForeignKey(to=Aircraft, on_delete=models.DO_NOTHING, related_name='aircraft_notes',
-                                 verbose_name='Śmigłowiec')
-    date_of_note = models.DateField(auto_now=True)
-    note = models.CharField(max_length=1255, blank=False, null=False, verbose_name='Notatka')
-
-    class Meta:
-        verbose_name = 'Notatka'
-        verbose_name_plural = 'Notatki śmigłowca'
+        return f"{self.aircraft} - {self.start_up.date()} {self.exercise} || {crew}"
