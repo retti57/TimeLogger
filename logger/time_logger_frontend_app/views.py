@@ -88,11 +88,6 @@ class ContactFormView(FormView):
     template_name = 'time_logger_frontend_app/contact.html'
     success_url = reverse_lazy('home')
 
-    def form_valid(self, form: ContactForm) -> HttpResponse:
-        print(form.cleaned_data)
-        #  @TODO automatyczne wypełanianie imienia
-        return super().form_valid(form)
-
 
 class SignUpView(CreateView):
     form_class = SignUpForm
@@ -106,7 +101,6 @@ class MilpersonView(CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form: MilPersonForm):
-        # @TODO cleand_data na pole formularza user
         user_credential = form.cleaned_data.get('username')
         print(user_credential)
 

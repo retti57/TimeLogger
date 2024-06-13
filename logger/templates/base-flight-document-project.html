@@ -38,7 +38,7 @@
 
             <a class="nav-item nav-link" id="home" href="{% url 'home' %}">Główna</a>
             <a class="nav-item nav-link" id="spiderpoints" href="{% url 'spiderpoints' %}">Spiderpoints</a>
-            <a class="nav-item nav-link" id="tab2" href="{% url 'tab2' %}">tab2</a>
+<!--            <a class="nav-item nav-link" id="tab2" href="{% url 'tab2' %}">tab2</a>-->
             <a class="nav-item nav-link" id="contact" href="{% url 'contact' %}">Kontakt</a>
             {% if user.is_authenticated %}
                 <a class="nav-item nav-link" id="notes" href="{% url 'notes' %}">Komentarze/Uwagi </a>
@@ -46,11 +46,11 @@
                 <a class="nav-item nav-link" id="createlog" href="{% url 'createlog' %}">Utwórz nowy Log</a>
                 <form method="post" action="{% url 'logout' %}?next={{request.path}}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-secondary btn-lg px-3 py-1">Log Out</button>
+                <button type="submit" class="btn btn-secondary btn-lg px-3 py-1">Wyloguj</button>
                 </form>
             {% else %}
-                <a class="nav-item nav-link" id="signup" href="{% url 'signup' %}">Sign Up</a>
-                <a class="nav-item nav-link" id="login" href="{% url 'login' %}?next={{request.path}}">Login</a>
+                <a class="nav-item nav-link" id="signup" href="{% url 'signup' %}">Zapisz się</a>
+                <a class="nav-item nav-link" id="login" href="{% url 'login' %}?next={{request.path}}">Zaloguj się</a>
             {% endif %}
         </div>
     </div>

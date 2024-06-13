@@ -15,7 +15,7 @@ class MilPersonForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('contact')
-        self.helper.add_input(Submit('submit', "Submit"))
+        self.helper.add_input(Submit('submit', "Wyślij"))
 
 
 class SignUpForm(UserCreationForm):
@@ -23,7 +23,7 @@ class SignUpForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('contact')
-        self.helper.add_input(Submit('submit', "Next"))
+        self.helper.add_input(Submit('submit', "Dalej"))
 
 
 class ContactForm(forms.Form):
@@ -34,7 +34,7 @@ class ContactForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('contact')
-        self.helper.add_input(Submit('submit', "Submit"))
+        self.helper.add_input(Submit('submit', "Wyślij"))
 
 
 class CreateLogForm(forms.ModelForm):
@@ -49,7 +49,7 @@ class CreateLogForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('logs')
-        self.helper.add_input(Submit('submit', "Submit"))
+        self.helper.add_input(Submit('submit', "Wyślij"))
 
 
 class CreateNoteForm(forms.ModelForm):
@@ -64,7 +64,7 @@ class CreateNoteForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_action = reverse_lazy('logs')
-        self.helper.add_input(Submit('submit', "Submit"))
+        self.helper.add_input(Submit('submit', "Wyślij"))
 
 
 
@@ -79,4 +79,4 @@ class CreateGridForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
         self.helper.form_action = reverse_lazy('spiderpoints')
-        self.helper.add_input(Submit('submit', "Create"))
+        self.helper.add_input(Submit('submit', "Utwórz"))
