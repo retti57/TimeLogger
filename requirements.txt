@@ -1,4 +1,5 @@
 requests
+spiderpoints
 django-crispy-forms
 crispy-bootstrap4
 django

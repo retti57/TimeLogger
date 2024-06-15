@@ -11,8 +11,8 @@ class Notes(models.Model):
     note = models.CharField(max_length=1255, default='-', blank=True, null=True, verbose_name='Notatka')
 
     class Meta:
-        verbose_name = 'Notatka do śmigłowca'
-        verbose_name_plural = 'Notatki śmigłowca'
+        verbose_name = 'Notatka'
+        verbose_name_plural = 'Notatki'
 
     def __str__(self):
         return f'{self.date_of_note} {self.note[:50]}(...)'
