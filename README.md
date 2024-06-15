@@ -1,7 +1,10 @@
 Projekt LOGGER został stworzony z myślą o ewidencjonowaniu czasów lotu personelu latającego w wojsku.
 Opiera się na strukturze chronometrażu. Z założenia, użytkownikami serwisu będą wojskowi.
 <br>
+Będąc pierwszym użytkownikiem należy utworzyć konto administratora za pomocą komendy w konsoli 
+<code>python manage.py createsuperuser</code>. Tym kontem należy zalogować się do panelu administratora.
 
+<br>
 Administator zmuszony jest wcześniej utworzyć bazę osób, które są personelem latającym. 
 Jest to konieczne by prawidłowo utworzyć Log, gdyż należy podać skład załogi biorącej udział w locie.  
 Można dokonać tego z panelu administratra.
