@@ -10,8 +10,6 @@ class Notes(models.Model):
     date_of_note = models.DateField(auto_now=True)
     note = models.CharField(max_length=1255, default='-', blank=True, null=True, verbose_name='Notatka')
 
-    # noted_aircraft = models.Fo(to=)
-
     class Meta:
         verbose_name = 'Notatka do śmigłowca'
         verbose_name_plural = 'Notatki śmigłowca'
@@ -34,8 +32,7 @@ class MilPerson(models.Model):
     last_name = models.CharField(max_length=30, blank=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, blank=True, related_name='credentials')
     function_on_board = models.TextField(max_length=255, choices=CHOICES, blank=True, null=True)
-    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, null=True, blank=True, related_name='milperson_notes',
-                              verbose_name='Uwagi')
+
 
     class Meta:
         verbose_name = 'Personel'
@@ -60,7 +57,7 @@ class Aircraft(models.Model):
     )
     aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False)
     aircraft_number = models.CharField(max_length=30, blank=False, choices=W3_NUMBERS)
-    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, blank=True, null=True, related_name='aircraft_notes',
+    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, null=True, blank=True, related_name='aircraft_notes',
                               verbose_name='Uwagi')
 
     class Meta:
@@ -84,9 +81,6 @@ class Log(models.Model):
 
     # załoga
     crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
-
-    notes = models.ForeignKey(to=Notes, on_delete=models.CASCADE, null=True, blank=True, related_name='log_notes',
-                              verbose_name='Komentarz')
 
     class Meta:
         verbose_name_plural = 'Logi'

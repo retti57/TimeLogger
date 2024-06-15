@@ -67,8 +67,6 @@ class CreateNoteForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', "Wyślij"))
 
 
-
-
 class CreateGridForm(forms.Form):
     initial_point = forms.CharField()
     distance = forms.IntegerField()

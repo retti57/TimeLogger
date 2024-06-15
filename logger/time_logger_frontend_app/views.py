@@ -3,15 +3,14 @@ from datetime import datetime
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpRequest
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView, DetailView, ListView
-from time_logger_backend_app.models import Log, MilPerson, Notes
+from time_logger_backend_app.models import Log, Notes
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm, \
     CreateNoteForm
-from logger.logger_utils import TimeCalculation
+from logger.time_calculator.TimeCalculation import TimeCalculation
 from django.http import HttpResponse
 
 
@@ -121,45 +120,10 @@ def logsview(request: HttpRequest):
     else:
         user_logs = Log.objects.filter(crew__user__username=request.user.username)
 
-    # logs = Log.objects.all()
-    # mil_person = MilPerson.objects.get(user__username=request.user.username)
-    # user_logs = Log.objects.filter(crew__last_name=mil_person.last_name)
-    # filtered_logs = []
-    # for log in user_logs:
-    #     crew = log.crew.all()  # lista załogi
-    #     if mil_person in crew:
-    #         filtered_logs.append(log)
     context = {"user_logs": user_logs, "count_logs": len(user_logs)}
 
     return render(request, 'time_logger_frontend_app/logs_list.html', context=context)
 
-
-@login_required
-def tab2(request: HttpRequest):
-    # mil_person = get_object_or_404(MilPerson, pk=request.user.id)
-    try:
-        mil_person = MilPerson.objects.get(user__id=request.user.id)
-
-        logs = Log.objects.filter(Q(crew__user_id=mil_person.user))
-        context = {"mil_person": mil_person, "logs": logs}
-        return render(request, 'time_logger_frontend_app/tab2.html', context=context)
-    except:
-        return HttpResponse("<h1>No such object</h1>")
-
-# @login_required
-# def detaillog(request: HttpRequest, pk):
-#     log = Log.objects.get(id=pk)
-#     crew = log.crew.all()
-#     # time calculation
-#
-#     Times = TimeCalculation(log)
-#     times_named_tup = Times.get_times()
-#     context = {
-#         "times": times_named_tup,
-#         "log": log,
-#         "crew": crew
-#     }
-#     return render(request, 'time_logger_frontend_app/log_detail.html', context)
 
 
 class LogDetail(LoginRequiredMixin, DetailView):
@@ -186,3 +150,4 @@ class AddNotesView(LoginRequiredMixin, CreateView):
     form_class = CreateNoteForm
     template_name = 'time_logger_frontend_app/add_notes.html'
     success_url = reverse_lazy('home')
+

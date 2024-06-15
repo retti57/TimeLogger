@@ -1,5 +1,5 @@
 from datetime import datetime
-from logger.logger.logger_utils import TimeCalculation
+from logger.logger.time_calculator.TimeCalculation import TimeCalculation
 from collections import namedtuple
 
 

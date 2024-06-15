@@ -1,8 +1,9 @@
 {% extends 'base-flight-document-project.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<h1> Create log</h1>
+<h1> Utwórz log</h1>
 <form method="post">
+    <p><b>Pamiętaj , dodawaj czas z sekundami równymi zeru, np.: <i> 08:08:00 , NIE 08:08:23</i></b></p>
     {% crispy form %}
 </form>
 {% endblock %}
