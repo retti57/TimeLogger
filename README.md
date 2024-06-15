@@ -1,9 +1,16 @@
 Projekt LOGGER został stworzony z myślą o ewidencjonowaniu czasów lotu personelu latającego w wojsku.
 Opiera się na strukturze chronometrażu. Z założenia, użytkownikami serwisu będą wojskowi.
+
 <br>
-Będąc pierwszym użytkownikiem należy utworzyć konto administratora za pomocą komendy w konsoli 
-<code>python manage.py createsuperuser</code>. Tym kontem należy zalogować się do panelu administratora na adres 
+Przygotowanie środowiska:
+1) Zainstaluj wymienione biblioteki : django, django-crispy-forms,crispy-bootstrap4, requests
+2) skopiuj plik logger do folderu gdzie masz przygotowane środowisko do projektu i wejdź do tego folderu. W tym miejscu powienien znajdować się plik manage.py.
+3) utwórz konto administratora wpisując w terminalu: <code>python manage.py createsuperuser</code>. Tym kontem należy zalogować się do panelu administratora na adres 
 localhostu tj. http://127.0.0.1:8000/admin/
+4) następnie utwórz migracje <code>python manage.py makemigrations</code>.
+5) zapisz migracje <code>python manage.py migrate</code>.
+W tym momencie utworzysz z pomocą Django bazę danych potrzebną do prawidłowego działania.
+
 
 <br>
 Administator zmuszony jest wcześniej utworzyć bazę osób, które są personelem latającym oraz dostępnych statków 

@@ -3,7 +3,7 @@ from datetime import datetime
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView, DetailView, ListView
@@ -11,13 +11,12 @@ from time_logger_backend_app.models import Log, Notes
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm, \
     CreateNoteForm
 from logger.time_calculator.TimeCalculation import TimeCalculation
-from django.http import HttpResponse
 
 
 
 def spiderpoints(request: HttpRequest):
-    """ Widok renderuje formularz do wpisania danych do przekazania do API . Wciśnięcie przycisku wysyła zapytanie do API
-    . API tworzy plik który następnie odsyła do klienta by pobrał. Odpowienio jest to plik kml lub gpx """
+    """ Widok renderuje formularz do wpisania danych do przekazania do API . Wciśnięcie przycisku wysyła zapytanie do
+    API. API tworzy plik który następnie odsyła do klienta by pobrał. Odpowienio jest to plik kml lub gpx """
     form = CreateGridForm()
     context = {"form": form}
     if request.method == "GET":
@@ -29,7 +28,7 @@ def spiderpoints(request: HttpRequest):
                 'occurrence': str(form.cleaned_data['occurrence']),
                 'distance': str(form.cleaned_data['distance']),
             }
-
+            from urllib3 import HTTPConnectionPool
             try:
                 file = requests.post('http://localhost:5000/points/', json=data)
                 file_content = file.content
@@ -52,7 +51,7 @@ def spiderpoints(request: HttpRequest):
                 response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
                 file_to_send.close()
                 return HttpResponse('<h1>No internet connection</h1>')
-            except Exception as e:
+            except HTTPConnectionPool as e:
                 print("Exeption: ", e)
                 print('I do it anyway...')
                 from spiderpoints.spiderpoints import SpiderPoints
@@ -76,10 +75,6 @@ def spiderpoints(request: HttpRequest):
 
 class HomeView(TemplateView):
     template_name = 'time_logger_frontend_app/home.html'
-
-
-class TabView(TemplateView):
-    template_name = 'time_logger_frontend_app/tab.html'
 
 
 class ContactFormView(FormView):
