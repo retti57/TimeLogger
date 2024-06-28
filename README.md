@@ -16,7 +16,7 @@ W tym momencie utworzysz z pomocą Django bazę danych potrzebną do prawidłowe
 Administator zmuszony jest wcześniej utworzyć bazę osób, które są personelem latającym oraz dostępnych statków 
 powietrznych. 
 Jest to konieczne by prawidłowo utworzyć Log, gdyż należy podać skład załogi biorącej udział w locie.  
-Można dokonać tego z panelu administratra.
+Można dokonać tego z panelu administratora.
 
 <br>
 Adres pod którym należy wejść na stronę to: http://127.0.0.1:8000/logger/

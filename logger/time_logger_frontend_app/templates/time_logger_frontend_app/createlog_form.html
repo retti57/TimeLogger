@@ -1,6 +1,70 @@
 {% extends 'base-flight-document-project.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Funkcja ustawiająca bieżącą datę i godzinę dla podanych elementów
+            function setDefaultDateTime(dateFieldId, datetimeFieldId) {
+                const dateInput = document.getElementById(dateFieldId);
+                const datetimeInput = document.getElementById(datetimeFieldId);
+                const now = new Date();
+
+                // Ustaw bieżącą datę dla pola wyboru daty
+                const formattedDate = now.toISOString().split('T')[0];
+                dateInput.value = formattedDate;
+
+                // Ustaw bieżącą datę i godzinę (bez sekund) dla pola datetime
+                const formattedDateTime = now.toISOString().split('T')[0] + 'T' + now.toTimeString().slice(0, 5);
+                datetimeInput.value = formattedDateTime;
+            }
+
+            // Funkcja ustawiająca wartość daty i godziny dla pola datetime na podstawie daty
+            function updateDateTimeFromDate(dateInputId, datetimeInputId) {
+                const dateInput = document.getElementById(dateInputId);
+                const datetimeInput = document.getElementById(datetimeInputId);
+
+                const selectedDate = new Date(dateInput.value);
+                const now = new Date();
+
+                // Ustaw datę i godzinę dla pola datetime zgodnie z wybraną datą
+                const updatedDateTime = new Date(
+                    selectedDate.getFullYear(),
+                    selectedDate.getMonth(),
+                    selectedDate.getDate(),
+                    now.getHours(),
+                    now.getMinutes(),
+                    0, 0 // Sekundy i milisekundy ustawione na zero
+                );
+
+                // Ustaw wartość bez strefy czasowej
+                const formattedDateTime = updatedDateTime.toISOString().slice(0, 16); // Format datetime-local
+                datetimeInput.value = formattedDateTime;
+            }
+
+             // Ustawienie domyślnych wartości dla wszystkich pól
+            setDefaultDateTime('date_of_flight', 'datetime-start_up');
+            setDefaultDateTime('date_of_flight', 'datetime-take_off');
+            setDefaultDateTime('date_of_flight', 'datetime-land');
+            setDefaultDateTime('date_of_flight', 'datetime-shut_down');
+
+            // Obsługa zmiany daty w polu date-field
+            const dateField = document.getElementById('date_of_flight');
+            dateField.addEventListener('change', function() {
+                updateDateTimeFromDate('date_of_flight', 'datetime-start_up');
+                updateDateTimeFromDate('date_of_flight', 'datetime-take_off');
+                updateDateTimeFromDate('date_of_flight', 'datetime-land');
+                updateDateTimeFromDate('date_of_flight', 'datetime-shut_down');
+            });
+        });
+
+        // Funkcja przetwarzająca datę i godzinę przed wysłaniem formularza
+        function processAllDateTimes() {
+            processDateTime('date_of_flight', 'datetime-start_up');
+            processDateTime('date_of_flight', 'datetime-take_off');
+            processDateTime('date_of_flight', 'datetime-land');
+            processDateTime('date_of_flight', 'datetime-shut_down');
+        }
+    </script>
 <h1> Utwórz log</h1>
 <form method="post">
     <p><b>Pamiętaj , dodawaj czas z sekundami równymi zeru, np.: <i> 08:08:00 , NIE 08:08:23</i></b></p>

@@ -38,11 +38,41 @@ class ContactForm(forms.Form):
 
 
 class CreateLogForm(forms.ModelForm):
+
+    field_order = 'aircraft', 'exercise', 'date_of_flight', 'start_up', 'take_off', 'land', 'shut_down', 'crew'
+
     class Meta:
         model = Log
+
         fields = '__all__'
         widgets = {
-            "crew": forms.CheckboxSelectMultiple()
+            "crew": forms.CheckboxSelectMultiple(),
+            "date_of_flight": forms.DateInput(
+                attrs={
+                    "type": "date",
+                    'id': 'date_of_flight',
+                    'data-datetime-field-id': "date_of_flight"
+                }),
+            "start_up": forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'id': 'datetime-start_up',
+                }),
+            "take_off": forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'id': 'datetime-take_off',
+                }),
+            "land": forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'id': 'datetime-land',
+                }),
+            "shut_down": forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'id': 'datetime-shut_down',
+                }),
         }
 
     def __init__(self, *args, **kwargs):

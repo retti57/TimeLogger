@@ -13,7 +13,6 @@ from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogFor
 from logger.time_calculator.TimeCalculation import TimeCalculation
 
 
-
 def spiderpoints(request: HttpRequest):
     """ Widok renderuje formularz do wpisania danych do przekazania do API . Wciśnięcie przycisku wysyła zapytanie do
     API. API tworzy plik który następnie odsyła do klienta by pobrał. Odpowienio jest to plik kml lub gpx """
@@ -47,7 +46,7 @@ def spiderpoints(request: HttpRequest):
                              data['distance']
                              ).create_kml_gpx(filename=filename)
                 file_to_send = open(f'{filename}.gpx')
-                response = HttpResponse(bytes(file_to_send. read().encode()), content_type='application/octet-stream')
+                response = HttpResponse(bytes(file_to_send.read().encode()), content_type='application/octet-stream')
                 response['Content-Disposition'] = f'attachment; filename="punkty.gpx"'
                 file_to_send.close()
                 return HttpResponse('<h1>No internet connection</h1>')
@@ -120,7 +119,6 @@ def logsview(request: HttpRequest):
     return render(request, 'time_logger_frontend_app/logs_list.html', context=context)
 
 
-
 class LogDetail(LoginRequiredMixin, DetailView):
     model = Log
     template_name = 'time_logger_frontend_app/log_detail.html'
@@ -145,4 +143,3 @@ class AddNotesView(LoginRequiredMixin, CreateView):
     form_class = CreateNoteForm
     template_name = 'time_logger_frontend_app/add_notes.html'
     success_url = reverse_lazy('home')
-

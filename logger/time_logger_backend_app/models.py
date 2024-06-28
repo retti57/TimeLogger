@@ -1,10 +1,6 @@
-import datetime
-
 from django.contrib.auth.models import User
 from django.db import models
 
-
-# Create your models here.
 
 class Notes(models.Model):
     date_of_note = models.DateField(auto_now=True)
@@ -33,7 +29,6 @@ class MilPerson(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, blank=True, related_name='credentials')
     function_on_board = models.TextField(max_length=255, choices=CHOICES, blank=True, null=True)
 
-
     class Meta:
         verbose_name = 'Personel'
         verbose_name_plural = 'Personel latający'
@@ -54,6 +49,7 @@ class Aircraft(models.Model):
         ('0618', '0618'),
         ('0615', '0615'),
         ('0609', '0609'),
+        ('0609', '0601'),
     )
     aircraft_type = models.CharField(max_length=255, default="W-3", choices=AC_TYPES, blank=False)
     aircraft_number = models.CharField(max_length=30, blank=False, choices=W3_NUMBERS)
@@ -69,15 +65,32 @@ class Aircraft(models.Model):
 
 
 class Log(models.Model):
+
     aircraft = models.ForeignKey(to=Aircraft, on_delete=models.CASCADE, related_name='aircraft',
                                  verbose_name='Śmigłowiec')
     exercise = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ćwiczenie')
     # czas
-    date_of_flight = models.DateField(auto_now=True)
-    start_up = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Uruchomienie[UTC]')
-    take_off = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Start[UTC]')
-    land = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Lądowanie[UTC]')
-    shut_down = models.DateTimeField(default=datetime.datetime.now(), verbose_name='Wyłączenie[UTC]')
+
+    date_of_flight = models.DateField(auto_now=False, verbose_name='Data lotu')
+    start_up = models.DateTimeField(
+        verbose_name='Uruchomienie[UTC]',
+        null=False
+    )
+    take_off = models.DateTimeField(
+        verbose_name='Start[UTC]',
+        null=False
+
+    )
+    land = models.DateTimeField(
+        verbose_name='Lądowanie[UTC]',
+        null=False
+
+    )
+    shut_down = models.DateTimeField(
+        verbose_name='Wyłączenie[UTC]',
+        null=False
+
+    )
 
     # załoga
     crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
