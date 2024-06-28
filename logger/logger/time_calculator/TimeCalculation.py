@@ -31,15 +31,23 @@ class TimeCalculation:
 
         return f'{h}:{m}'
 
-    def get_times(self):
-        """ Returns namedtuple with fields 'air','gnd', 'full'.
-        Times in specific fields are converted in format HH:MM"""
-        air = self._conv_sec_to_H_M(self._time_calculation(self.object.take_off, self.object.land))
+    def get_times_in_seconds(self) -> tuple:
+        air = self._time_calculation(self.object.take_off, self.object.land)
         gnd1 = self._time_calculation(self.object.start_up, self.object.take_off)
         gnd2 = self._time_calculation(self.object.land, self.object.shut_down)
         gnd = gnd2 + gnd1
-        gnd_total = self._conv_sec_to_H_M(gnd)
-        full = self._conv_sec_to_H_M(self._time_calculation(self.object.start_up, self.object.shut_down))
+        full = self._time_calculation(self.object.start_up, self.object.shut_down)
+
+        return air, gnd, full
+
+    def get_times(self) -> namedtuple:
+        """ Returns namedtuple with fields 'air','gnd', 'full'.
+        Times in specific fields are converted in format HH:MM"""
+        air_s, gnd_s, full_s = self.get_times_in_seconds()
+        air = self._conv_sec_to_H_M(air_s)
+        gnd_total = self._conv_sec_to_H_M(gnd_s)
+        full = self._conv_sec_to_H_M(full_s)
 
         FlightTimes = namedtuple("FlightTimes", "air gnd full")
+
         return FlightTimes(air, gnd_total, full)
