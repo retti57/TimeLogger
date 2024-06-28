@@ -83,35 +83,41 @@ class CreateLogForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', "Wyślij"))
 
     def clean(self):
+        """ Validators """
         cleaned_data = super().clean()
+        datetime_dof = cleaned_data.get("date_of_flight")
         datetime_start_up = cleaned_data.get("start_up")
         datetime_takeoff = cleaned_data.get("take_off")
         datetime_land = cleaned_data.get("land")
         datetime_shutdown = cleaned_data.get("shut_down")
+        if str(datetime_dof) not in str(datetime_start_up):
 
-        if datetime_start_up and datetime_takeoff:
-            if datetime_takeoff < datetime_start_up:
-                error_message = _("Czas startu nie może być wcześniejszy niż czas uruchomienia")
-                self.add_error('take_off', error_message)
+            error_message = _("Data wylotu jest niezgodna z pozostałymi polami")
+            self.add_error('date_of_flight', error_message)
+        else:
+            if datetime_start_up and datetime_takeoff:
+                if datetime_takeoff < datetime_start_up:
+                    error_message = _("Czas startu nie może być wcześniejszy niż czas uruchomienia")
+                    self.add_error('take_off', error_message)
 
-        if datetime_takeoff and datetime_land:
-            if datetime_land < datetime_takeoff:
-                error_message = _("Czas lądowania nie może być wcześniejszy niż czas startu")
+            if datetime_takeoff and datetime_land:
+                if datetime_land < datetime_takeoff:
+                    error_message = _("Czas lądowania nie może być wcześniejszy niż czas startu")
 
-                self.add_error('land', error_message)
+                    self.add_error('land', error_message)
 
-        if datetime_land and datetime_shutdown:
-            if datetime_shutdown < datetime_land:
-                error_message = _("Czas wyłączenia nie może być wcześniejszy niż czas lądowania")
+            if datetime_land and datetime_shutdown:
+                if datetime_shutdown < datetime_land:
+                    error_message = _("Czas wyłączenia nie może być wcześniejszy niż czas lądowania")
 
-                self.add_error('shut_down', error_message)
+                    self.add_error('shut_down', error_message)
 
-        if datetime_start_up == datetime_shutdown:
-            error_message_su = _("Czas uruchomienia nie może być równy czasowi wyłączenia")
-            error_message_sd = _("Czas wyłączenia nie może być równy czasowi uruchomienia")
+            if datetime_start_up == datetime_shutdown:
+                error_message_su = _("Czas uruchomienia nie może być równy czasowi wyłączenia")
+                error_message_sd = _("Czas wyłączenia nie może być równy czasowi uruchomienia")
 
-            self.add_error('shut_down', error_message_sd)
-            self.add_error('start_up', error_message_su)
+                self.add_error('shut_down', error_message_sd)
+                self.add_error('start_up', error_message_su)
 
         return cleaned_data
 

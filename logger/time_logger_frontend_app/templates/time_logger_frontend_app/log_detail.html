@@ -54,19 +54,19 @@
                     <tbody>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Uruchomienie</th>
-                        <td class="fs-5 col-md-8">{{log.start_up | time}}</td>
+                        <td class="fs-5 col-md-8">{{log.start_up | time:"H:i"}}</td>
                     </tr>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Start</th>
-                        <td class="fs-5 col-md-8">{{log.take_off | time}}</td>
+                        <td class="fs-5 col-md-8">{{log.take_off | time:"H:i"}}</td>
                     </tr>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Lądowanie</th>
-                        <td class="fs-5 col-md-8">{{log.land | time}}</td>
+                        <td class="fs-5 col-md-8">{{log.land | time:"H:i"}}</td>
                     </tr>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Wyłączenie</th>
-                        <td class="fs-5 col-md-8">{{log.shut_down | time}}</td>
+                        <td class="fs-5 col-md-8">{{log.shut_down | time:"H:i"}}</td>
                     </tr>
                     </tbody>
                 </table>
