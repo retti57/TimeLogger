@@ -4,7 +4,8 @@ from . import views
 APP_NAME = 'logger_frontend'
 
 urlpatterns = [
-    path('', views.HomeView.as_view(), name='home'),
+    path('home', views.home, name='home'),
+    path('',views.home, name='home'),
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('milperson/', views.MilpersonView.as_view(), name='milperson'),
     path('contact/', views.ContactFormView.as_view(), name='contact'),

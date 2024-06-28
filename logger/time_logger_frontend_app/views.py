@@ -1,3 +1,4 @@
+from collections import namedtuple
 from datetime import datetime
 
 import requests
@@ -72,8 +73,49 @@ def spiderpoints(request: HttpRequest):
     return render(request, "spiderpoints/spiderpoints.html", context=context)
 
 
-class HomeView(TemplateView):
-    template_name = 'time_logger_frontend_app/home.html'
+def home(request: HttpRequest):
+    """ Wyswietla całkowity nalot zliczony ze wszytkich zarejestrowanych lotów"""
+
+    def seconds_into_h_m(seconds: int) -> namedtuple:
+        from math import floor
+        h = floor(seconds / 3600)
+        m = floor((seconds % 3600) / 60)
+
+        LogPartialTime = namedtuple('LogPartialTime', 'hours minutes')
+        return LogPartialTime(h, m)
+
+    if request.user.is_superuser:
+        user_logs = Log.objects.all()
+        print('all')
+    else:
+        user_logs = Log.objects.filter(crew__user__username=request.user.username)
+
+    #  Tworzenie list czasów z każdego logu [ (air,gnd,full),(air,gnd,full) ...]
+    times_per_log = []
+    for log in user_logs:
+        Times = TimeCalculation(log)
+        times_per_log.append(Times.get_times_in_seconds())
+
+    tot_air = 0
+    tot_gnd = 0
+    tot_tot = 0
+    #  suma poszczególnych składników
+    #  timetuple => FlightTimes(air, gnd_total, full)
+    for timetuple in times_per_log:
+        tot_air += timetuple[0]
+        tot_gnd += timetuple[1]
+        tot_tot += timetuple[2]
+
+    context = {
+        "air_h": seconds_into_h_m(tot_air).hours,
+        "air_m": seconds_into_h_m(tot_air).minutes,
+        "gnd_h": seconds_into_h_m(tot_gnd).hours,
+        "gnd_m": seconds_into_h_m(tot_gnd).minutes,
+        "full_h": seconds_into_h_m(tot_tot).hours,
+        "full_m": seconds_into_h_m(tot_tot).minutes
+    }
+
+    return render(request, 'time_logger_frontend_app/home.html', context)
 
 
 class ContactFormView(FormView):

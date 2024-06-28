@@ -65,7 +65,6 @@ class Aircraft(models.Model):
 
 
 class Log(models.Model):
-
     aircraft = models.ForeignKey(to=Aircraft, on_delete=models.CASCADE, related_name='aircraft',
                                  verbose_name='Śmigłowiec')
     exercise = models.CharField(max_length=255, blank=True, null=True, verbose_name='Ćwiczenie')
@@ -79,21 +78,19 @@ class Log(models.Model):
     take_off = models.DateTimeField(
         verbose_name='Start[UTC]',
         null=False
-
     )
     land = models.DateTimeField(
         verbose_name='Lądowanie[UTC]',
         null=False
-
     )
     shut_down = models.DateTimeField(
         verbose_name='Wyłączenie[UTC]',
         null=False
-
     )
 
     # załoga
     crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
+
 
     class Meta:
         verbose_name_plural = 'Logi'

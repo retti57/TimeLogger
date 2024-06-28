@@ -49,9 +49,9 @@ class CreateLogForm(forms.ModelForm):
             "crew": forms.CheckboxSelectMultiple(),
             "date_of_flight": forms.DateInput(
                 attrs={
-                    "type": "date",
+                    'type': 'date',
                     'id': 'date_of_flight',
-                    'data-datetime-field-id': "date_of_flight"
+                    'data-datetime-field-id': 'date_of_flight'
                 }),
             "start_up": forms.DateTimeInput(
                 attrs={
