@@ -2,13 +2,15 @@ from collections import namedtuple
 from datetime import datetime
 
 import requests
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView, DetailView, ListView
-from time_logger_backend_app.models import Log, Notes
+from time_logger_backend_app.models import Log, Notes, MilPerson
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm, \
     CreateNoteForm
 from logger.time_calculator.TimeCalculation import TimeCalculation
@@ -148,18 +150,31 @@ class CreateLogView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('logs')
 
 
-@login_required
-def logsview(request: HttpRequest):
-    if request.user.is_superuser:
-        user_logs = Log.objects.all()
-        print('all')
-    else:
-        user_logs = Log.objects.filter(crew__user__username=request.user.username)
+class LogsListView(LoginRequiredMixin, ListView):
+    model = Log
+    paginate_by = 15
+    template_name = 'time_logger_frontend_app/logs_list.html'
+    context_object_name = 'user_logs'
 
-    context = {"user_logs": user_logs, "count_logs": len(user_logs)}
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Log.objects.all().order_by('pk')
+        else:
+            return Log.objects.filter(crew__user__username=self.request.user.username).order_by('pk')
 
-    return render(request, 'time_logger_frontend_app/logs_list.html', context=context)
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_superuser:
+            current_user = self.request.user.username
+        else:
+            current_user = MilPerson.objects.get(user__pk=self.request.user.id)
+        context.update(
+            {
+                "current_user": current_user,
+                "count_logs": len(self.get_queryset()),
+            }
+        )
+        return context
 
 class LogDetail(LoginRequiredMixin, DetailView):
     model = Log

@@ -1,37 +1,54 @@
 {% extends 'base-flight-document-project.html' %}
 {% block content %}
-<h1> Logi użytkownika: {{ user.last_name | upper }} {{ user.first_name }}</h1>
+<h1> Logi użytkownika: {{ current_user.last_name | upper }} {{ current_user.first_name }}</h1>
 <h3> Liczba wszystkich logów: {{ count_logs }}</h3>
 <div class="logs">
-        {% for user_log in user_logs %}
+    {% for user_log in user_logs %}
 
-    <table class="table table-striped">
-      <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Ś-c</th>
-      <th scope="col">Data</th>
-      <th scope="col">Uruchomienie</th>
-      <th scope="col">Start</th>
-      <th scope="col">Lądowanie</th>
-      <th scope="col">Wyłączenie</th>
-
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row"><a href="/logger/log/{{ user_log.id }}">{{user_log.id}}</a></th>
-      <td>{{ user_log.aircraft}}</td>
-      <td>{{ user_log.date_of_flight | date:"d.m.Y" }}</td>
-      <td>{{ user_log.start_up | time:"H:i" }}</td>
-      <td>{{ user_log.take_off | time:"H:i" }}</td>
-      <td>{{ user_log.land | time:"H:i" }}</td>
-      <td>{{ user_log.shut_down | time:"H:i" }}</td>
-    </tr>
-  </tbody>
-  </table>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Ś-c</th>
+                <th scope="col">Data</th>
+                <th scope="col">Uruchomienie</th>
+                <th scope="col">Start</th>
+                <th scope="col">Lądowanie</th>
+                <th scope="col">Wyłączenie</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{user_log.id}}</td>
+                <td>{{ user_log.aircraft}}</td>
+                <td>{{ user_log.date_of_flight | date:"d.m.Y" }}</td>
+                <td>{{ user_log.start_up | time:"H:i" }}</td>
+                <td>{{ user_log.take_off | time:"H:i" }}</td>
+                <td>{{ user_log.land | time:"H:i" }}</td>
+                <td>{{ user_log.shut_down | time:"H:i" }}</td>
+                <td scope="row"><a role="button" class="btn btn-warning" href="/logger/log/{{ user_log.id }}">Szczegóły lotu</a></td>
+              </tr>
+            </tbody>
+          </table>
     {% endfor %}
-</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 </div>
 <h3> Liczba wszystkich logów: {{ count_logs }}</h3>
 

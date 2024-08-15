@@ -91,6 +91,8 @@ class Log(models.Model):
     # załoga
     crew = models.ManyToManyField(to=MilPerson, verbose_name='Załoga')
 
+    ## rozkaz / PTL
+    # order_to_fly = models.ForeignKey(to=Order,on_delete=models.DO_NOTHING, related_name='Order')
 
     class Meta:
         verbose_name_plural = 'Logi'

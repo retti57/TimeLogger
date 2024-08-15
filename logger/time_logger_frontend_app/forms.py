@@ -121,6 +121,7 @@ class CreateLogForm(forms.ModelForm):
 
         return cleaned_data
 
+
 class CreateNoteForm(forms.ModelForm):
     class Meta:
         model = Notes
