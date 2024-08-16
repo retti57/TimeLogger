@@ -1,5 +1,6 @@
-requests
+requests~=2.31.0
 spiderpoints
-django-crispy-forms
+django-crispy-forms~=2.1
 crispy-bootstrap4
-django
+django~=5.0.4
+django-unfold
