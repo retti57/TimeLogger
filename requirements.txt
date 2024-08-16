@@ -3,4 +3,5 @@ spiderpoints
 django-crispy-forms~=2.1
 crispy-bootstrap4
 django~=5.0.4
-django-unfold
+django-unfold==0.35.0
+django-import-export==4.1.1
