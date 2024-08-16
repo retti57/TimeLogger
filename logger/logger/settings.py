@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'unfold',
+    'unfold.contrib.import_export',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'time_logger_backend_app',
     'time_logger_frontend_app',
-    "crispy_forms",
-    "crispy_bootstrap4",
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'import_export',
 ]
 
 MIDDLEWARE = [

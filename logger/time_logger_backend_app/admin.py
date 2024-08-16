@@ -6,6 +6,9 @@ from django.contrib.auth.models import User, Group
 from unfold.forms import UserChangeForm, UserCreationForm, AdminPasswordChangeForm
 from unfold.admin import ModelAdmin
 
+from import_export.admin import ImportExportModelAdmin
+from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
+
 
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -27,8 +30,9 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
 @admin.register(Aircraft)
 @admin.register(Log)
 @admin.register(Notes)
-class CustomAdminClass(ModelAdmin):
-    pass
+class CustomAdminClass(ModelAdmin, ImportExportModelAdmin):
+    import_form_class = ImportForm
+    export_form_class = ExportForm
 
 # admin.site.register(MilPerson)
 # admin.site.register(Aircraft)
