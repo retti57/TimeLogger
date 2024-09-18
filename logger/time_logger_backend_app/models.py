@@ -102,3 +102,11 @@ class Log(models.Model):
         crew = ' '.join(crew_list)
 
         return f"{self.aircraft} - {self.start_up.date()} {self.exercise} || {crew}"
+
+
+class OrderForFlight(models.Model):
+    number = models.PositiveIntegerField(verbose_name='Numer rozkazu', unique=True)
+    log = models.ForeignKey(to=Log, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        verbose_name_plural = 'Rozkazy do lotu'

@@ -4,7 +4,7 @@ from django import forms
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm
-from time_logger_backend_app.models import Log, MilPerson, Notes
+from time_logger_backend_app.models import Log, MilPerson, Notes, OrderForFlight
 
 
 class MilPersonForm(forms.ModelForm):
@@ -148,3 +148,20 @@ class CreateGridForm(forms.Form):
         self.helper.form_method = 'post'
         self.helper.form_action = reverse_lazy('spiderpoints')
         self.helper.add_input(Submit('submit', "Utwórz"))
+
+
+class CreateOrderForm(forms.ModelForm):
+    class Meta:
+        model = OrderForFlight
+        fields = '__all__'
+        widgets = {
+            "number": forms.IntegerField(),
+            "crew": forms.SelectMultiple()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_action = reverse_lazy('logs')
+        self.helper.add_input(Submit('submit', "Wyślij"))
+

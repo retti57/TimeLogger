@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MilPerson, Aircraft, Log, Notes
+from .models import MilPerson, Aircraft, Log, Notes, OrderForFlight
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.models import User, Group
@@ -26,6 +26,7 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
     pass
 
 
+@admin.register(OrderForFlight)
 @admin.register(MilPerson)
 @admin.register(Aircraft)
 @admin.register(Log)
@@ -33,8 +34,3 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
 class CustomAdminClass(ModelAdmin, ImportExportModelAdmin):
     import_form_class = ImportForm
     export_form_class = ExportForm
-
-# admin.site.register(MilPerson)
-# admin.site.register(Aircraft)
-# admin.site.register(Log)
-# admin.site.register(Notes)

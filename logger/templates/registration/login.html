@@ -2,14 +2,21 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% if form.errors %}
-    <p>Podany login lub hasło jest nieprawidłowe. Spróbuj ponownie</p>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <p>Podany login lub hasło jest nieprawidłowe. Spróbuj ponownie</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
 {% endif %}
 
 {% if next %}
     {% if user.is_authenticated %}
         <p>Nie masz dostępu do tej strony.</p>
     {% else %}
-        <p>Zaloguj się by zobaczyć zawartość strony.</p>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p>Zaloguj się by zobaczyć zawartość strony.</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     {% endif%}
 {% endif%}
 

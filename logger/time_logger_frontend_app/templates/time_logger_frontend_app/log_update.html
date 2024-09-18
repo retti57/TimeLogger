@@ -4,6 +4,8 @@
 {% block content %}
 
 <main>
+
+
     <div class="flight_info">
         <h1 class="text-body-emphasis">{{log.aircraft}}<br> Ćwiczenie: {{log.exercise}}</h1>
         <div class="mb-5">
@@ -12,7 +14,9 @@
 
 
     </div>
-
+        <div class="alert alert-warning alert show" role="alert">
+            <p align="center"><strong>EDYCJA DANYCH</strong></p>
+        </div>
     <div class="flight_times">
         <table>
             <tbody>
@@ -33,22 +37,25 @@
 
     </div>
     <div class="col-md-6">
-        <a href="{% url 'addnotes' %}" class="btn btn-primary btn-lg px-4">Wyślij uwagi</a>
-        <a href="{% url 'log_update' log.id %}" class="btn btn-info btn-lg px-4">Edytuj</a>
-        <a href="/" class="btn btn-light btn-lg px-4">Pokaż rozkaz</a>
+        <button id="saveChangesBtn" class="btn btn-success btn-lg px-4" type="submit">Zapisz zmiany</button>
+        <a href="{% url 'log_detail' log.id %}" class="btn btn-secondary btn-lg px-4">Zakończ bez zapisu</a>
+
     </div>
     <hr class="col-3 col-md-10 mb-5">
 
     <div class="row g-5">
-        <div class="col-md-6">
-            <h2 class="text-body-emphasis">Załoga</h2>
-            <div class="crew">
-                <ol>{%for p in crew%}
-                    <li class="fs-5 col-md-8">{{ p }}</li>
-                    {%endfor%}
-                </ol>
+        <form id="updateLogForm" method="POST">
+            {% csrf_token %}
+            {% if log_form.errors %}
+                {{ log_form.errors }}
+            {% endif %}
+            <div class="col-md-6">
+                <h2 class="text-body-emphasis">Załoga</h2>
+                <div class="crew">
+                    {{ log_form.crew }}
+                </div>
             </div>
-        </div>
+
 
         <div class="col-md-6">
             <h2 class="text-body-emphasis">Chronometraż [UTC]</h2>
@@ -57,25 +64,39 @@
                     <tbody>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Uruchomienie</th>
-                        <td class="fs-5 col-md-8">{{log.start_up | time:"H:i"}}</td>
+                        <td class="fs-5 col-md-8">{{log_form.start_up}}</td>
                     </tr>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Start</th>
-                        <td class="fs-5 col-md-8">{{log.take_off | time:"H:i"}}</td>
+                        <td class="fs-5 col-md-8">{{log_form.take_off}}</td>
                     </tr>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Lądowanie</th>
-                        <td class="fs-5 col-md-8">{{log.land | time:"H:i"}}</td>
+                        <td class="fs-5 col-md-8">{{log_form.land}}</td>
                     </tr>
                     <tr>
                         <th class="fs-5 col-md-4" scope="row">Wyłączenie</th>
-                        <td class="fs-5 col-md-8">{{log.shut_down | time:"H:i"}}</td>
+                        <td class="fs-5 col-md-8">{{log_form.shut_down}}</td>
                     </tr>
                     </tbody>
                 </table>
 
             </div>
         </div>
+        </form>
+
     </div>
 </main>
+<script>
+        document.getElementById("saveChangesBtn").addEventListener("click", function(event) {
+            event.preventDefault(); // Zapobiega domyślnemu przesłaniu formularza
+
+            // Prześlij formularz
+            document.getElementById("updateLogForm").submit();
+
+            // Wyświetl modal
+            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
+        });
+    </script>
 {% endblock %}

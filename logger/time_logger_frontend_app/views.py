@@ -2,19 +2,17 @@ from collections import namedtuple
 from datetime import datetime
 
 import requests
-from django.contrib.auth.models import User
-from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, FormView, TemplateView, DetailView, ListView
-from time_logger_backend_app.models import Log, Notes, MilPerson
+from django.utils import timezone
+from django.views.generic import CreateView, FormView, TemplateView, DetailView, ListView, UpdateView
+from time_logger_backend_app.models import Log, Notes, MilPerson, OrderForFlight
 from time_logger_frontend_app.forms import ContactForm, SignUpForm, CreateLogForm, MilPersonForm, CreateGridForm, \
     CreateNoteForm
 from logger.time_calculator.TimeCalculation import TimeCalculation
-
+from django.utils.dateparse import parse_datetime
 
 def spiderpoints(request: HttpRequest):
     """ Widok renderuje formularz do wpisania danych do przekazania do API . Wciśnięcie przycisku wysyła zapytanie do
@@ -158,9 +156,9 @@ class LogsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return Log.objects.all().order_by('pk')
+            return Log.objects.all().order_by('-pk')
         else:
-            return Log.objects.filter(crew__user__username=self.request.user.username).order_by('pk')
+            return Log.objects.filter(crew__user__username=self.request.user.username).order_by('-pk')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -175,6 +173,53 @@ class LogsListView(LoginRequiredMixin, ListView):
             }
         )
         return context
+
+
+class LogUpdate(LoginRequiredMixin, UpdateView):
+    model = Log
+    fields = '__all__'
+    success_url = reverse_lazy('log_detail')
+    template_name = 'time_logger_frontend_app/log_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        log_form = CreateLogForm(instance=self.object)
+
+        Times = TimeCalculation(self.model.objects.get(id=self.kwargs.get('pk')))
+        crew_list = [p.last_name for p in self.model.objects.get(id=self.kwargs.get('pk')).crew.all()]
+        context["log_form"] = log_form
+        context["times"] = Times.get_times()
+        context["crew"] = crew_list
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        log = self.get_object()
+        log_form = CreateLogForm(request.POST)
+        # print(log_form.data)
+        for field in log_form.changed_data:
+            if field == 'crew':
+                new_set = set()
+                for person_id in request.POST.getlist(field):
+                    new_flight_attendant = MilPerson.objects.get(id=person_id)
+                    new_set.add(new_flight_attendant)
+
+                log.crew.clear()
+                log.crew.set(new_set)
+            elif field in ['start_up', 'take_off', 'land', 'shut_down']:
+                changed_field_value = request.POST.get(field)
+                new_datetime = parse_datetime(changed_field_value)
+                new_datetime = timezone.make_aware(new_datetime, timezone.get_current_timezone())
+                setattr(log, field, new_datetime)
+            else:
+                changed_field_value = request.POST.get(field)
+                setattr(log, field, changed_field_value)
+
+        log.save()
+
+        return redirect('log_detail', pk=log.id)
+
 
 class LogDetail(LoginRequiredMixin, DetailView):
     model = Log
@@ -200,3 +245,10 @@ class AddNotesView(LoginRequiredMixin, CreateView):
     form_class = CreateNoteForm
     template_name = 'time_logger_frontend_app/add_notes.html'
     success_url = reverse_lazy('home')
+
+
+class OrderCreate(LoginRequiredMixin, CreateView):
+    model = OrderForFlight
+    fields = '__all__'
+    template_name = 'time_logger_frontend_app/order_create.html'
+
